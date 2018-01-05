@@ -58,7 +58,17 @@ with warnings.catch_warnings():
 TEST_EXTENSIONS = (sysconfig.get_config_var('TEST_MODULES') == 'yes')
 
 # This global variable is used to hold the list of modules to be disabled.
-DISABLED_MODULE_LIST = []
+pdm_env = "PYTHON_DISABLE_MODULES"
+if pdm_env in os.environ:
+    DISABLED_MODULE_LIST = os.environ[pdm_env].split()
+else:
+    DISABLED_MODULE_LIST = []
+
+pds_env = "PYTHON_DISABLE_SSL"
+if pds_env in os.environ:
+    disable_ssl = os.environ[pds_env]
+else:
+    disable_ssl = 0
 
 # --list-module-names option used by Tools/scripts/generate_module_names.py
 LIST_MODULE_NAMES = False
@@ -2408,6 +2418,7 @@ class PyBuildExt(build_ext):
                            depends=depends))
 
     def detect_openssl_hashlib(self):
+        global disable_ssl
         # Detect SSL support for the socket module (via _ssl)
         config_vars = sysconfig.get_config_vars()
 
@@ -2426,7 +2437,7 @@ class PyBuildExt(build_ext):
         openssl_libdirs = split_var('OPENSSL_LDFLAGS', '-L')
         openssl_libs = split_var('OPENSSL_LIBS', '-l')
         openssl_rpath = config_vars.get('OPENSSL_RPATH')
-        if not openssl_libs:
+        if not openssl_libs or disable_ssl:
             # libssl and libcrypto not found
             self.missing.extend(['_ssl', '_hashlib'])
             return None, None
