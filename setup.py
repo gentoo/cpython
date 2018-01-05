@@ -108,6 +108,7 @@ Programming Language :: Python
 Topic :: Software Development
 """
 
+exit_status = 0
 
 def run_command(cmd):
     status = os.system(cmd)
@@ -535,8 +536,10 @@ class PyBuildExt(build_ext):
             print("been built, they are *disabled* by configure:")
             print_three_column(self.disabled_configure)
             print()
+        global exit_status
 
         if self.failed:
+            exit_status = 1
             failed = self.failed[:]
             print()
             print("Failed to build these modules:")
@@ -544,6 +547,7 @@ class PyBuildExt(build_ext):
             print()
 
         if self.failed_on_import:
+            exit_status = 1
             failed = self.failed_on_import[:]
             print()
             print("Following modules built successfully"
@@ -2663,6 +2667,7 @@ def main():
           scripts = ["Tools/scripts/pydoc3", "Tools/scripts/idle3",
                      "Tools/scripts/2to3"]
         )
+    sys.exit(exit_status)
 
 # --install-platlib
 if __name__ == '__main__':
