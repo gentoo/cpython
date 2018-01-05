@@ -848,7 +848,7 @@ class PyBuildExt(build_ext):
         # directories (i.e. '.' and 'Include') must be first.  See issue
         # 10520.
         if not CROSS_COMPILING:
-            add_dir_to_list(self.compiler.library_dirs, '/usr/local/lib')
+            add_dir_to_list(self.compiler.library_dirs, '/usr/local/@@GENTOO_LIBDIR@@')
             add_dir_to_list(self.compiler.include_dirs, '/usr/local/include')
         # only change this for cross builds for 3.3, issues on Mageia
         if CROSS_COMPILING:
@@ -869,7 +869,7 @@ class PyBuildExt(build_ext):
             add_dir_to_list(self.compiler.include_dirs,
                             sysconfig.get_config_var("INCLUDEDIR"))
 
-        system_lib_dirs = ['/lib64', '/usr/lib64', '/lib', '/usr/lib']
+        system_lib_dirs = ['/@@GENTOO_LIBDIR@@', '/usr/@@GENTOO_LIBDIR@@']
         system_include_dirs = ['/usr/include']
         # lib_dirs and inc_dirs are used to search for files;
         # if a file is found in one of those directories, it can
@@ -1106,11 +1106,11 @@ class PyBuildExt(build_ext):
             elif curses_library:
                 readline_libs.append(curses_library)
             elif self.compiler.find_library_file(self.lib_dirs +
-                                                     ['/usr/lib/termcap'],
+                                                     ['/usr/@@GENTOO_LIBDIR@@/termcap'],
                                                      'termcap'):
                 readline_libs.append('termcap')
             self.addext(Extension('readline', ['readline.c'],
-                               library_dirs=['/usr/lib/termcap'],
+                               library_dirs=['/usr/@@GENTOO_LIBDIR@@/termcap'],
                                libraries=readline_libs))
         else:
             self.addext(Extension('readline', ['readline.c']))
