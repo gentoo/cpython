@@ -449,7 +449,7 @@ else:
 def unlink(filename):
     try:
         _unlink(filename)
-    except (FileNotFoundError, NotADirectoryError):
+    except (FileNotFoundError, NotADirectoryError, PermissionError):
         pass
 
 def rmdir(dirname):
