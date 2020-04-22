@@ -99,6 +99,8 @@ class AllTest(unittest.TestCase):
         denylist = set([
             # Will raise a SyntaxError when compiling the exec statement
             '__future__',
+            # imports numpy which causes warnings
+            'test.test_pickletools',
         ])
 
         # In case _socket fails to build, make this test fail more gracefully
