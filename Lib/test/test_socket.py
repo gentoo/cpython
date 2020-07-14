@@ -2242,6 +2242,7 @@ class BasicRDSTest(unittest.TestCase):
 
 
 @unittest.skipUnless(HAVE_SOCKET_RDS, 'RDS sockets required for this test.')
+@unittest.skip('Hangs frequently')
 class RDSTest(ThreadedRDSSocketTest):
 
     def __init__(self, methodName='runTest'):
