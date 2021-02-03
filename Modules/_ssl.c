@@ -79,6 +79,10 @@
 #  error "OPENSSL_THREADS is not defined, Python requires thread-safe OpenSSL"
 #endif
 
+#ifndef OPENSSL_NO_SSL3
+#  define OPENSSL_NO_SSL3 1
+#endif
+
 
 #ifdef BIO_get_ktls_send
 #  ifdef MS_WINDOWS
