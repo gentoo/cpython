@@ -79,6 +79,10 @@ static PySocketModule_APIObject PySocketModule;
 #  error "OPENSSL_THREADS is not defined, Python requires thread-safe OpenSSL"
 #endif
 
+#ifndef OPENSSL_NO_SSL3
+#  define OPENSSL_NO_SSL3 1
+#endif
+
 /* SSL error object */
 static PyObject *PySSLErrorObject;
 static PyObject *PySSLCertVerificationErrorObject;
