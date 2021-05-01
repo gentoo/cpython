@@ -1454,6 +1454,14 @@ to speed up repeated connections from the same clients.
       ciphers, no ``NULL`` ciphers and no ``MD5`` ciphers (except for
       :data:`PROTOCOL_SSLv2`).
 
+   .. versionchanged:: 3.9.5_p2 (Gentoo)
+
+      The default cipher suites now include only secure AES and ChaCha20
+      ciphers with forward secrecy and security level 2. RSA and DH keys with
+      less than 2048 bits and ECC keys with less than 224 bits are prohibited.
+      :data:`PROTOCOL_TLS`, :data:`PROTOCOL_TLS_CLIENT`, and
+      :data:`PROTOCOL_TLS_SERVER` use TLS 1.2 as minimum TLS version.
+
 
 :class:`SSLContext` objects have the following methods and attributes:
 
