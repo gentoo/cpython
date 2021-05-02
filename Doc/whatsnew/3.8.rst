@@ -950,6 +950,14 @@ notebook.
 reviewed by Vinay Sajip in :issue:`33897`.)
 
 
+ipaddress
+---------
+
+Starting with Python 3.8.9_p1 (Gentoo)  the :mod:`ipaddress` module no longer
+accepts any leading zeros in IPv4 address strings.
+(Contributed by Christian Heimes in :issue:`36384`).
+
+
 math
 ----
 
