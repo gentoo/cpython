@@ -1707,6 +1707,7 @@ class _PosixSpawnMixin:
                             os.environ, setsigdef=[signal.NSIG, signal.NSIG+1])
 
     @requires_sched
+    @unittest.skip('Gentoo: fails when PORTAGE_NICENESS is set')
     @unittest.skipIf(sys.platform.startswith(('freebsd', 'netbsd')),
                      "bpo-34685: test can fail on BSD")
     def test_setscheduler_only_param(self):
@@ -1727,6 +1728,7 @@ class _PosixSpawnMixin:
         self.assertEqual(os.waitpid(pid, 0), (pid, 0))
 
     @requires_sched
+    @unittest.skip('Gentoo: fails when PORTAGE_NICENESS is set')
     @unittest.skipIf(sys.platform.startswith(('freebsd', 'netbsd')),
                      "bpo-34685: test can fail on BSD")
     def test_setscheduler_with_policy(self):
