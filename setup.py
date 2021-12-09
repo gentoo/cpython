@@ -1109,11 +1109,11 @@ class PyBuildExt(build_ext):
                                                      ['/usr/lib/termcap'],
                                                      'termcap'):
                 readline_libs.append('termcap')
-            self.add(Extension('readline', ['readline.c'],
+            self.addext(Extension('readline', ['readline.c'],
                                library_dirs=['/usr/lib/termcap'],
                                libraries=readline_libs))
         else:
-            self.missing.append('readline')
+            self.addext(Extension('readline', ['readline.c']))
 
         # Curses support, requiring the System V version of curses, often
         # provided by the ncurses library.
@@ -1143,7 +1143,7 @@ class PyBuildExt(build_ext):
         curses_enabled = True
         if curses_library.startswith('ncurses'):
             curses_libs = [curses_library]
-            self.add(Extension('_curses', ['_cursesmodule.c'],
+            self.addext(Extension('_curses', ['_cursesmodule.c'],
                                include_dirs=curses_includes,
                                define_macros=curses_defines,
                                libraries=curses_libs))
@@ -1157,24 +1157,24 @@ class PyBuildExt(build_ext):
             else:
                 curses_libs = ['curses']
 
-            self.add(Extension('_curses', ['_cursesmodule.c'],
+            self.addext(Extension('_curses', ['_cursesmodule.c'],
                                define_macros=curses_defines,
                                libraries=curses_libs))
         else:
             curses_enabled = False
-            self.missing.append('_curses')
+            self.addext(Extension('_curses', ['_cursesmodule.c']))
 
         # If the curses module is enabled, check for the panel module
         # _curses_panel needs some form of ncurses
         skip_curses_panel = True if AIX else False
         if (curses_enabled and not skip_curses_panel and
                 self.compiler.find_library_file(self.lib_dirs, panel_library)):
-            self.add(Extension('_curses_panel', ['_curses_panel.c'],
+            self.addext(Extension('_curses_panel', ['_curses_panel.c'],
                            include_dirs=curses_includes,
                            define_macros=curses_defines,
                            libraries=[panel_library, *curses_libs]))
         elif not skip_curses_panel:
-            self.missing.append('_curses_panel')
+            self.addext(Extension('_curses_panel', ['_curses_panel.c']))
 
     def detect_crypt(self):
         self.addext(Extension('_crypt', ['_cryptmodule.c']))
@@ -1247,9 +1247,9 @@ class PyBuildExt(build_ext):
                         )
                         break
             if dbmext is not None:
-                self.add(dbmext)
+                self.addext(dbmext)
             else:
-                self.missing.append('_dbm')
+                self.addext(Extension('_dbm', ['_dbmmodule.c']))
 
         # Anthony Baxter's gdbm module.  GNU dbm(3) will require -lgdbm:
         self.addext(Extension('_gdbm', ['_gdbmmodule.c']))

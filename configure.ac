@@ -6839,6 +6839,13 @@ PY_STDLIB_MOD_SIMPLE([_codecs_tw])
 PY_STDLIB_MOD_SIMPLE([_multibytecodec])
 PY_STDLIB_MOD_SIMPLE([unicodedata])
 
+dnl Gentoo hack
+PY_STDLIB_MOD_SIMPLE([_curses])
+PY_STDLIB_MOD_SIMPLE([_curses_panel])
+PY_STDLIB_MOD_SIMPLE([_dbm])
+PY_STDLIB_MOD_SIMPLE([readline])
+PY_STDLIB_MOD_SIMPLE([_tkinter])
+
 dnl By default we always compile these even when OpenSSL is available
 dnl (issue #14693). The modules are small.
 PY_STDLIB_MOD([_md5], [test "$with_builtin_md5" = yes])
