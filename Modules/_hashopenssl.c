@@ -1038,15 +1038,21 @@ typedef struct _internal_name_mapper_state {
 
 /* A callback function to pass to OpenSSL's OBJ_NAME_do_all(...) */
 static void
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
+_openssl_hash_name_mapper(EVP_MD *md, void *arg)
+#else
 _openssl_hash_name_mapper(const EVP_MD *md, const char *from,
                           const char *to, void *arg)
+#endif
 {
     _InternalNameMapperState *state = (_InternalNameMapperState *)arg;
     PyObject *py_name;
 
     assert(state != NULL);
-    if (md == NULL)
+    // ignore all undefined providers
+    if ((md == NULL) || (EVP_MD_nid(md) == NID_undef)) {
         return;
+    }
 
     py_name = py_digest_name(md);
     if (py_name == NULL) {
@@ -1070,7 +1076,12 @@ generate_hash_name_list(void)
         return NULL;
     state.error = 0;
 
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
+    // get algorithms from all activated providers in default context
+    EVP_MD_do_all_provided(NULL, &_openssl_hash_name_mapper, &state);
+#else
     EVP_MD_do_all(&_openssl_hash_name_mapper, &state);
+#endif
 
     if (state.error) {
         Py_DECREF(state.set);
