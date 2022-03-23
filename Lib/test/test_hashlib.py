@@ -203,6 +203,10 @@ class HashLibTestCase(unittest.TestCase):
     def test_algorithms_available(self):
         self.assertTrue(set(hashlib.algorithms_guaranteed).
                             issubset(hashlib.algorithms_available))
+        # all available algorithms must be loadable, bpo-47101
+        self.assertNotIn("undefined", hashlib.algorithms_available)
+        for name in hashlib.algorithms_available:
+            digest = hashlib.new(name)
 
     def test_unknown_hash(self):
         self.assertRaises(ValueError, hashlib.new, 'spam spam spam spam spam')
