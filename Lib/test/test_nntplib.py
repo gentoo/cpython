@@ -272,7 +272,7 @@ class NetworkedNNTPTestsMixin:
             return True
 
         kwargs = dict(
-            timeout=support.INTERNET_TIMEOUT,
+            timeout=TIMEOUT,
             usenetrc=False
         )
         if self.ssl_context is not None:
@@ -316,12 +316,12 @@ class NetworkedNNTPTests(NetworkedNNTPTestsMixin, unittest.TestCase):
     def setUpClass(cls):
         support.requires("network")
         kwargs = dict(
-            timeout=support.INTERNET_TIMEOUT,
+            timeout=TIMEOUT,
             usenetrc=False
         )
         if cls.ssl_context is not None:
             kwargs["ssl_context"] = cls.ssl_context
-        with socket_helper.transient_internet(cls.NNTP_HOST):
+        with support.transient_internet(cls.NNTP_HOST):
             try:
                 cls.server = cls.NNTP_CLASS(cls.NNTP_HOST, **kwargs)
             except SSLError as ssl_err:
