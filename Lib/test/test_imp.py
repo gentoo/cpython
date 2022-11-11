@@ -479,6 +479,7 @@ class PEP3147Tests(unittest.TestCase):
 
 
 class NullImporterTests(unittest.TestCase):
+    @unittest.skip('Gentoo: fails on ZFS or other strict UTF8-only filesystems (bpo 37584)')
     @unittest.skipIf(os_helper.TESTFN_UNENCODABLE is None,
                      "Need an undecodeable filename")
     def test_unencodeable(self):
