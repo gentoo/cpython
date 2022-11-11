@@ -117,6 +117,7 @@ class UnicodeFileTests(unittest.TestCase):
             os.stat(name)
             self._apply_failure(os.listdir, name, self._listdir_failure)
 
+    @unittest.skip('Gentoo: fails on ZFS or other strict UTF8-only filesystems (bpo 37584)')
     # Skip the test on darwin, because darwin does normalize the filename to
     # NFD (a variant of Unicode NFD form). Normalize the filename to NFC, NFKC,
     # NFKD in Python is useless, because darwin will normalize it later and so
