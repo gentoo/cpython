@@ -659,6 +659,7 @@ class OpenTests(unittest.TestCase):
             self.assertTrue(os.path.exists(path))
             cx.execute(self._sql)
 
+    @unittest.skip('Gentoo: fails on ZFS or other strict UTF8-only filesystems (bpo 37584)')
     @unittest.skipIf(sys.platform == "win32", "skipped on Windows")
     @unittest.skipIf(sys.platform == "darwin", "skipped on macOS")
     @unittest.skipIf(is_emscripten or is_wasi, "not supported on Emscripten/WASI")
@@ -705,6 +706,7 @@ class OpenTests(unittest.TestCase):
             with self.assertRaises(sqlite.OperationalError):
                 cx.execute(self._sql)
 
+    @unittest.skip('Gentoo: fails on ZFS or other strict UTF8-only filesystems (bpo 37584)')
     @unittest.skipIf(sys.platform == "win32", "skipped on Windows")
     @unittest.skipIf(sys.platform == "darwin", "skipped on macOS")
     @unittest.skipIf(is_emscripten or is_wasi, "not supported on Emscripten/WASI")
