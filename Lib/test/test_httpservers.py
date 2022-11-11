@@ -574,6 +574,7 @@ class SimpleHTTPServerTestCase(BaseTestCase):
         filename = os_helper.TESTFN_NONASCII + '.txt'
         self.check_list_dir_filename(filename)
 
+    @unittest.skip('Gentoo: fails on ZFS or other strict UTF8-only filesystems (bpo 37584)')
     @unittest.skipIf(is_apple,
                      'undecodable name cannot always be decoded on Apple platforms')
     @unittest.skipIf(sys.platform == 'win32',

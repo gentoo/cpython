@@ -557,6 +557,7 @@ class CmdLineTest(unittest.TestCase):
             self.assertStartsWith(text[1], '  File ')
             self.assertStartsWith(text[3], 'NameError')
 
+    @unittest.skip('Gentoo: fails on ZFS or other strict UTF8-only filesystems (bpo 37584)')
     def test_non_ascii(self):
         # Apple platforms deny the creation of a file with an invalid UTF-8 name.
         # Windows allows creating a name with an arbitrary bytes name, but
