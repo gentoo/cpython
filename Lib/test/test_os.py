@@ -2199,6 +2199,7 @@ class Pep383Tests(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.dir)
 
+    @unittest.skipIf(support.TESTFN_UNENCODABLE, 'Gentoo: fails on ZFS or other strict UTF8-only filesystems (bpo 37584)')
     def test_listdir(self):
         expected = self.unicodefn
         found = set(os.listdir(self.dir))
@@ -2211,11 +2212,13 @@ class Pep383Tests(unittest.TestCase):
         finally:
             os.chdir(current_directory)
 
+    @unittest.skipIf(support.TESTFN_UNENCODABLE, 'Gentoo: fails on ZFS or other strict UTF8-only filesystems (bpo 37584)')
     def test_open(self):
         for fn in self.unicodefn:
             f = open(os.path.join(self.dir, fn), 'rb')
             f.close()
 
+    @unittest.skipIf(support.TESTFN_UNENCODABLE, 'Gentoo: fails on ZFS or other strict UTF8-only filesystems (bpo 37584)')
     @unittest.skipUnless(hasattr(os, 'statvfs'),
                             "need os.statvfs()")
     def test_statvfs(self):
@@ -2225,6 +2228,7 @@ class Pep383Tests(unittest.TestCase):
             fullname = os.path.join(self.dir, fn)
             os.statvfs(fullname)
 
+    @unittest.skipIf(support.TESTFN_UNENCODABLE, 'Gentoo: fails on ZFS or other strict UTF8-only filesystems (bpo 37584)')
     def test_stat(self):
         for fn in self.unicodefn:
             os.stat(os.path.join(self.dir, fn))

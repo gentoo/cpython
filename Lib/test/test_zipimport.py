@@ -647,6 +647,7 @@ class UncompressedZipImportTestCase(ImportHooksBaseTestCase):
         files = {TESTMOD + ".py": (NOW, raise_src)}
         self.doTest(None, files, TESTMOD, call=self.doTraceback)
 
+    @unittest.skipIf(support.TESTFN_UNENCODABLE, 'Gentoo: fails on ZFS or other strict UTF8-only filesystems (bpo 37584)')
     @unittest.skipIf(support.TESTFN_UNENCODABLE is None,
                      "need an unencodable filename")
     def testUnencodable(self):
