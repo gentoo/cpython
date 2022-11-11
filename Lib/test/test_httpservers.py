@@ -411,6 +411,7 @@ class SimpleHTTPServerTestCase(BaseTestCase):
         reader.close()
         return body
 
+    @unittest.skip('Gentoo: fails on ZFS or other strict UTF8-only filesystems (bpo 37584)')
     @unittest.skipIf(is_apple,
                      'undecodable name cannot always be decoded on Apple platforms')
     @unittest.skipIf(sys.platform == 'win32',
