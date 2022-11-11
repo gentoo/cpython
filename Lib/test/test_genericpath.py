@@ -474,6 +474,7 @@ class CommonTest(GenericTest):
                 for path in ('', 'fuu', 'f\xf9\xf9', '/fuu', 'U:\\'):
                     self.assertIsInstance(abspath(path), str)
 
+    @unittest.skip('Gentoo: fails on ZFS or other strict UTF8-only filesystems (bpo 37584)')
     def test_nonascii_abspath(self):
         if (os_helper.TESTFN_UNDECODABLE
         # Mac OS X denies the creation of a directory with an invalid
