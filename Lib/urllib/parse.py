@@ -440,7 +440,7 @@ def urlsplit(url, scheme='', allow_fragments=True):
         clear_cache()
     netloc = query = fragment = ''
     i = url.find(':')
-    if i > 0:
+    if i > 0 and url[0].isascii() and url[0].isalpha():
         if url[:i] == 'http': # optimize the common case
             url = url[i+1:]
             if url[:2] == '//':
