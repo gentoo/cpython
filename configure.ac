@@ -1112,7 +1112,7 @@ AC_ARG_ENABLE(profiling,
 if test "x$enable_profiling" = xyes; then
   ac_save_cc="$CC"
   CC="$CC -pg"
-  AC_LINK_IFELSE([AC_LANG_SOURCE([[int main() { return 0; }]])],
+  AC_LINK_IFELSE([AC_LANG_SOURCE([[int main(void) { return 0; }]])],
     [],
     [enable_profiling=no])
   CC="$ac_save_cc"
@@ -2060,7 +2060,7 @@ AC_CACHE_VAL(ac_cv_pthread_is_default,
 
 void* routine(void* p){return NULL;}
 
-int main(){
+int main(void){
   pthread_t p;
   if(pthread_create(&p,NULL,routine,NULL)!=0)
     return 1;
@@ -2095,7 +2095,7 @@ AC_RUN_IFELSE([AC_LANG_SOURCE([[
 
 void* routine(void* p){return NULL;}
 
-int main(){
+int main(void){
   pthread_t p;
   if(pthread_create(&p,NULL,routine,NULL)!=0)
     return 1;
@@ -2124,7 +2124,7 @@ AC_RUN_IFELSE([AC_LANG_SOURCE([[
 
 void* routine(void* p){return NULL;}
 
-int main(){
+int main(void){
   pthread_t p;
   if(pthread_create(&p,NULL,routine,NULL)!=0)
     return 1;
@@ -2153,7 +2153,7 @@ AC_RUN_IFELSE([AC_LANG_SOURCE([[
 
 void* routine(void* p){return NULL;}
 
-int main(){
+int main(void){
   pthread_t p;
   if(pthread_create(&p,NULL,routine,NULL)!=0)
     return 1;
@@ -2951,7 +2951,7 @@ esac
 AC_MSG_CHECKING(aligned memory access is required)
 AC_CACHE_VAL(ac_cv_aligned_required,
 [AC_RUN_IFELSE([AC_LANG_SOURCE([[
-int main()
+int main(void)
 {
     char s[16];
     int i, *p1, *p2;
@@ -3271,6 +3271,7 @@ yes
     AC_MSG_CHECKING([for pthread_create in -lpthread])
     AC_LINK_IFELSE([AC_LANG_PROGRAM([[
 #include <stdio.h>
+#include <stdlib.h>
 #include <pthread.h>
 
 void * start_routine (void *arg) { exit (0); }]], [[
@@ -3336,7 +3337,7 @@ if test "$posix_threads" = "yes"; then
       void *foo(void *parm) {
         return NULL;
       }
-      int main() {
+      int main(void) {
         pthread_attr_t attr;
         pthread_t id;
         if (pthread_attr_init(&attr)) return (-1);
@@ -3899,7 +3900,7 @@ AC_CACHE_CHECK([for chflags], [ac_cv_have_chflags], [dnl
 AC_RUN_IFELSE([AC_LANG_SOURCE([[
 #include <sys/stat.h>
 #include <unistd.h>
-int main(int argc, char*argv[])
+int main(int argc, char *argv[])
 {
   if(chflags(argv[0], 0) != 0)
     return 1;
@@ -3921,7 +3922,7 @@ AC_CACHE_CHECK([for lchflags], [ac_cv_have_lchflags], [dnl
 AC_RUN_IFELSE([AC_LANG_SOURCE([[
 #include <sys/stat.h>
 #include <unistd.h>
-int main(int argc, char*argv[])
+int main(int argc, char *argv[])
 {
   if(lchflags(argv[0], 0) != 0)
     return 1;
@@ -4125,7 +4126,7 @@ then
 #include <sys/socket.h>
 #include <netinet/in.h>
 
-int main()
+int main(void)
 {
   int passive, gaierr, inet4 = 0, inet6 = 0;
   struct addrinfo hints, *ai, *aitop;
@@ -4583,7 +4584,7 @@ CC="$CC $BASECFLAGS"
 AC_RUN_IFELSE([AC_LANG_SOURCE([[
 #include <stdlib.h>
 #include <math.h>
-int main() {
+int main(void) {
     volatile double x, y, z;
     /* 1./(1-2**-53) -> 1+2**-52 (correct), 1.0 (double rounding) */
     x = 0.99999999999999989; /* 1-2**-53 */
@@ -4900,7 +4901,7 @@ fi],
 AC_MSG_CHECKING(whether right shift extends the sign bit)
 AC_CACHE_VAL(ac_cv_rshift_extends_sign, [
 AC_RUN_IFELSE([AC_LANG_SOURCE([[
-int main()
+int main(void)
 {
 	return (((-1)>>3 == -1) ? 0 : 1);
 }
@@ -5027,7 +5028,7 @@ AC_CACHE_VAL(ac_cv_broken_nice, [
 AC_RUN_IFELSE([AC_LANG_SOURCE([[
 #include <stdlib.h>
 #include <unistd.h>
-int main()
+int main(void)
 {
 	int val1 = nice(1);
 	if (val1 != -1 && val1 == nice(2))
@@ -5051,7 +5052,7 @@ AC_RUN_IFELSE([AC_LANG_SOURCE([[
 #include <poll.h>
 #include <unistd.h>
 
-int main()
+int main(void)
 {
     struct pollfd poll_struct = { 42, POLLIN|POLLPRI|POLLOUT, 0 };
     int poll_test;
@@ -5089,7 +5090,7 @@ AC_RUN_IFELSE([AC_LANG_SOURCE([[
 extern char *tzname[];
 #endif
 
-int main()
+int main(void)
 {
 	/* Note that we need to ensure that not only does tzset(3)
 	   do 'something' with localtime, but it works as documented
@@ -5445,9 +5446,10 @@ AC_CHECK_TYPE(socklen_t,,
 AC_MSG_CHECKING(for broken mbstowcs)
 AC_CACHE_VAL(ac_cv_broken_mbstowcs,
 AC_RUN_IFELSE([AC_LANG_SOURCE([[
+#include <stddef.h>
 #include <stdio.h>
-#include<stdlib.h>
-int main() {
+#include <stdlib.h>
+int main(void) {
     size_t len = -1;
     const char *str = "text";
     len = mbstowcs(NULL, str, 0);
@@ -5558,7 +5560,7 @@ AC_RUN_IFELSE([AC_LANG_SOURCE([[
 #include <stdlib.h>
 #include <string.h>
 void foo(void *p, void *q) { memmove(p, q, 19); }
-int main() {
+int main(void) {
   char a[32] = "123456789000000000";
   foo(&a[9], a);
   if (strcmp(a, "123456789123456789000000000") != 0)
@@ -5599,7 +5601,7 @@ if test "$have_gcc_asm_for_x87" = yes; then
               );
               return r;
             }
-            int main() {
+            int main(void) {
               int p = 8;
               if ((foo(&p) ? : p) != 6)
                 return 1;
@@ -5627,7 +5629,7 @@ AC_LINK_IFELSE(
     #include <stdatomic.h>
     atomic_int int_var;
     atomic_uintptr_t uintptr_var;
-    int main() {
+    int main(void) {
       atomic_store_explicit(&int_var, 5, memory_order_relaxed);
       atomic_store_explicit(&uintptr_var, 0, memory_order_relaxed);
       int loaded_value = atomic_load_explicit(&int_var, memory_order_seq_cst);
@@ -5648,9 +5650,10 @@ AC_MSG_CHECKING(for GCC >= 4.7 __atomic builtins)
 AC_LINK_IFELSE(
 [
   AC_LANG_SOURCE([[
-    volatile int val = 1;
-    int main() {
-      __atomic_load_n(&val, __ATOMIC_SEQ_CST);
+    int val;
+    int main(void) {
+      __atomic_store_n(&val, 1, __ATOMIC_SEQ_CST);
+      (void)__atomic_load_n(&val, __ATOMIC_SEQ_CST);
       return 0;
     }
   ]])
@@ -5684,7 +5687,7 @@ AC_LINK_IFELSE(
   AC_LANG_SOURCE([[
     #include <dirent.h>
 
-    int main() {
+    int main(void) {
       struct dirent entry;
       return entry.d_type == DT_UNKNOWN;
     }
@@ -5702,11 +5705,12 @@ AC_MSG_CHECKING(for the Linux getrandom() syscall)
 AC_LINK_IFELSE(
 [
   AC_LANG_SOURCE([[
+    #include <stddef.h>
     #include <unistd.h>
     #include <sys/syscall.h>
     #include <linux/random.h>
 
-    int main() {
+    int main(void) {
         char buffer[1];
         const size_t buflen = sizeof(buffer);
         const int flags = GRND_NONBLOCK;
@@ -5729,9 +5733,10 @@ AC_MSG_CHECKING(for the getrandom() function)
 AC_LINK_IFELSE(
 [
   AC_LANG_SOURCE([[
+    #include <stddef.h>
     #include <sys/random.h>
 
-    int main() {
+    int main(void) {
         char buffer[1];
         const size_t buflen = sizeof(buffer);
         const int flags = 0;
