@@ -62,6 +62,7 @@ extern "C" {
 
 
 #ifdef HAVE_THREAD_LOCAL
+__attribute__((tls_model("global-dynamic")))
 _Py_thread_local PyThreadState *_Py_tss_tstate = NULL;
 #endif
 
