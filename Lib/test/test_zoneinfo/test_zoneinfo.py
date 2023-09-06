@@ -27,11 +27,8 @@ from test.support.script_helper import assert_python_ok
 lzma = import_module('lzma')
 py_zoneinfo, c_zoneinfo = test_support.get_modules()
 
-try:
-    importlib.metadata.metadata("tzdata")
-    HAS_TZDATA_PKG = True
-except importlib.metadata.PackageNotFoundError:
-    HAS_TZDATA_PKG = False
+# Gentoo installs a dummy `tzdata` package
+HAS_TZDATA_PKG = False
 
 ZONEINFO_DATA = None
 ZONEINFO_DATA_V1 = None
