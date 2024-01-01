@@ -4387,10 +4387,10 @@ _init_pos_args(PyObject *self, PyTypeObject *type,
         return index;
     }
 
-    for (i = 0;
-         i < dict->length && (i+index) < PyTuple_GET_SIZE(args);
+    for (i = index;
+         i < dict->length && i < PyTuple_GET_SIZE(args);
          ++i) {
-        PyObject *pair = PySequence_GetItem(fields, i);
+        PyObject *pair = PySequence_GetItem(fields, i - index);
         PyObject *name, *val;
         int res;
         if (!pair)
@@ -4400,7 +4400,7 @@ _init_pos_args(PyObject *self, PyTypeObject *type,
             Py_DECREF(pair);
             return -1;
         }
-        val = PyTuple_GET_ITEM(args, i + index);
+        val = PyTuple_GET_ITEM(args, i);
         if (kwds) {
             if (PyDict_GetItemWithError(kwds, name)) {
                 PyErr_Format(PyExc_TypeError,
@@ -4423,7 +4423,7 @@ _init_pos_args(PyObject *self, PyTypeObject *type,
         if (res == -1)
             return -1;
     }
-    return index + dict->length;
+    return dict->length;
 }
 
 static int
