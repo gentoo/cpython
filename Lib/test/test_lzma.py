@@ -115,14 +115,17 @@ class CompressorDecompressorTestCase(unittest.TestCase):
         lzd = LZMADecompressor(lzma.FORMAT_RAW, filters=FILTERS_RAW_1)
         self._test_decompressor(lzd, COMPRESSED_RAW_1, lzma.CHECK_NONE)
 
+    @unittest.skip("Gentoo: requires app-arch?xz-utils[extra-filters]")
     def test_decompressor_raw_2(self):
         lzd = LZMADecompressor(lzma.FORMAT_RAW, filters=FILTERS_RAW_2)
         self._test_decompressor(lzd, COMPRESSED_RAW_2, lzma.CHECK_NONE)
 
+    @unittest.skip("Gentoo: requires app-arch?xz-utils[extra-filters]")
     def test_decompressor_raw_3(self):
         lzd = LZMADecompressor(lzma.FORMAT_RAW, filters=FILTERS_RAW_3)
         self._test_decompressor(lzd, COMPRESSED_RAW_3, lzma.CHECK_NONE)
 
+    @unittest.skip("Gentoo: requires app-arch?xz-utils[extra-filters]")
     def test_decompressor_raw_4(self):
         lzd = LZMADecompressor(lzma.FORMAT_RAW, filters=FILTERS_RAW_4)
         self._test_decompressor(lzd, COMPRESSED_RAW_4, lzma.CHECK_NONE)
@@ -285,12 +288,14 @@ class CompressorDecompressorTestCase(unittest.TestCase):
         lzd = LZMADecompressor()
         self._test_decompressor(lzd, cdata, lzma.CHECK_NONE)
 
+    @unittest.skip("Gentoo: requires app-arch?xz-utils[extra-filters]")
     def test_roundtrip_raw(self):
         lzc = LZMACompressor(lzma.FORMAT_RAW, filters=FILTERS_RAW_4)
         cdata = lzc.compress(INPUT) + lzc.flush()
         lzd = LZMADecompressor(lzma.FORMAT_RAW, filters=FILTERS_RAW_4)
         self._test_decompressor(lzd, cdata, lzma.CHECK_NONE)
 
+    @unittest.skip("Gentoo: requires app-arch?xz-utils[extra-filters]")
     def test_roundtrip_raw_empty(self):
         lzc = LZMACompressor(lzma.FORMAT_RAW, filters=FILTERS_RAW_4)
         cdata = lzc.compress(INPUT)
@@ -440,6 +445,8 @@ class CompressDecompressFunctionTestCase(unittest.TestCase):
                 COMPRESSED_RAW_1, lzma.FORMAT_RAW, filters=FILTERS_RAW_1)
         self.assertEqual(ddata, INPUT)
 
+        # Gentoo: these require app-arch?xz-utils[extra-filters]
+        return
         ddata = lzma.decompress(
                 COMPRESSED_RAW_2, lzma.FORMAT_RAW, filters=FILTERS_RAW_2)
         self.assertEqual(ddata, INPUT)
@@ -457,6 +464,8 @@ class CompressDecompressFunctionTestCase(unittest.TestCase):
         self.assertRaises(LZMAError, lzma.decompress, COMPRESSED_ALONE[:128])
         self.assertRaises(LZMAError, lzma.decompress, COMPRESSED_RAW_1[:128],
                           format=lzma.FORMAT_RAW, filters=FILTERS_RAW_1)
+        # Gentoo: these require app-arch?xz-utils[extra-filters]
+        return
         self.assertRaises(LZMAError, lzma.decompress, COMPRESSED_RAW_2[:128],
                           format=lzma.FORMAT_RAW, filters=FILTERS_RAW_2)
         self.assertRaises(LZMAError, lzma.decompress, COMPRESSED_RAW_3[:128],
@@ -492,6 +501,8 @@ class CompressDecompressFunctionTestCase(unittest.TestCase):
         ddata = lzma.decompress(cdata)
         self.assertEqual(ddata, INPUT)
 
+        # Gentoo: these require app-arch?xz-utils[extra-filters]
+        return
         cdata = lzma.compress(INPUT, lzma.FORMAT_RAW, filters=FILTERS_RAW_4)
         ddata = lzma.decompress(cdata, lzma.FORMAT_RAW, filters=FILTERS_RAW_4)
         self.assertEqual(ddata, INPUT)
@@ -796,6 +807,8 @@ class FileTestCase(unittest.TestCase):
                       format=lzma.FORMAT_RAW, filters=FILTERS_RAW_1) as f:
             self.assertEqual(f.read(), INPUT)
             self.assertEqual(f.read(), b"")
+        # Gentoo: these require app-arch?xz-utils[extra-filters]
+        return
         with LZMAFile(BytesIO(COMPRESSED_RAW_2),
                       format=lzma.FORMAT_RAW, filters=FILTERS_RAW_2) as f:
             self.assertEqual(f.read(), INPUT)
@@ -835,6 +848,8 @@ class FileTestCase(unittest.TestCase):
             self.assertEqual(f.read(), INPUT * 5)
         with LZMAFile(BytesIO(COMPRESSED_XZ + COMPRESSED_ALONE)) as f:
             self.assertEqual(f.read(), INPUT * 2)
+        # Gentoo: these require app-arch?xz-utils[extra-filters]
+        return
         with LZMAFile(BytesIO(COMPRESSED_RAW_3 * 4),
                       format=lzma.FORMAT_RAW, filters=FILTERS_RAW_3) as f:
             self.assertEqual(f.read(), INPUT * 4)
@@ -978,6 +993,8 @@ class FileTestCase(unittest.TestCase):
             self.assertListEqual(list(iter(f)), lines)
         with LZMAFile(BytesIO(COMPRESSED_ALONE), format=lzma.FORMAT_ALONE) as f:
             self.assertListEqual(list(iter(f)), lines)
+        # Gentoo: these require app-arch?xz-utils[extra-filters]
+        return
         with LZMAFile(BytesIO(COMPRESSED_RAW_2),
                       format=lzma.FORMAT_RAW, filters=FILTERS_RAW_2) as f:
             self.assertListEqual(list(iter(f)), lines)
@@ -1022,6 +1039,8 @@ class FileTestCase(unittest.TestCase):
                 f.write(INPUT)
             expected = lzma.compress(INPUT, format=lzma.FORMAT_ALONE)
             self.assertEqual(dst.getvalue(), expected)
+        # Gentoo: these require app-arch?xz-utils[extra-filters]
+        return
         with BytesIO() as dst:
             with LZMAFile(dst, "w", format=lzma.FORMAT_RAW,
                           filters=FILTERS_RAW_2) as f:
