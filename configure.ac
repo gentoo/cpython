@@ -170,8 +170,8 @@ AC_ARG_WITH([build-python],
     AS_VAR_IF([cross_compiling], [yes],
       [AC_MSG_ERROR([Cross compiling requires --with-build-python])]
     )
-    PYTHON_FOR_BUILD='./$(BUILDPYTHON) -E'
-    PYTHON_FOR_FREEZE="./_bootstrap_python"
+    PYTHON_FOR_BUILD='./$(BUILDPYTHON) -E -s -S'
+    PYTHON_FOR_FREEZE="./_bootstrap_python -E -s -S"
   ]
 )
 AC_SUBST([PYTHON_FOR_BUILD])
