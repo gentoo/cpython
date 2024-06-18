@@ -363,6 +363,7 @@ def getsitepackages(prefixes=None):
 
 def addsitepackages(known_paths, prefixes=None):
     """Add site-packages to sys.path"""
+    if os.environ.get("GENTOO_CPYTHON_BUILD") and prefixes is None: return known_paths
     for sitedir in getsitepackages(prefixes):
         if os.path.isdir(sitedir):
             addsitedir(sitedir, known_paths)
