@@ -323,6 +323,7 @@ class StartupState:
         global PREFIXES when *prefixes* is None.  Each directory's startup
         data is accumulated for later processing by process().
         """
+        if os.environ.get("GENTOO_CPYTHON_BUILD") and prefixes is None: return
         _trace("Processing global site-packages")
         for sitedir in getsitepackages(prefixes):
             if os.path.isdir(sitedir):
