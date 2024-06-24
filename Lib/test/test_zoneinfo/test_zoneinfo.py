@@ -1925,7 +1925,12 @@ class ExtensionBuiltTest(unittest.TestCase):
     def test_cache_location(self):
         # The pure Python version stores caches on attributes, but the C
         # extension stores them in C globals (at least for now)
-        self.assertFalse(hasattr(c_zoneinfo.ZoneInfo, "_weak_cache"))
+        try:
+            import _zoneinfo
+        except ImportError:
+            pass
+        else:
+            self.assertFalse(hasattr(c_zoneinfo.ZoneInfo, "_weak_cache"))
         self.assertTrue(hasattr(py_zoneinfo.ZoneInfo, "_weak_cache"))
 
     @requires_gil_enabled("gh-117783: types may be immortalized")
