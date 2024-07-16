@@ -14965,7 +14965,15 @@ intern_static(PyInterpreterState *interp, PyObject *s /* stolen */)
     assert(s != NULL);
     assert(_PyUnicode_CHECK(s));
     assert(_PyUnicode_STATE(s).statically_allocated);
-    assert(!PyUnicode_CHECK_INTERNED(s));
+
+    switch (PyUnicode_CHECK_INTERNED(s)) {
+        case SSTATE_NOT_INTERNED:
+            break;
+        case SSTATE_INTERNED_IMMORTAL_STATIC:
+            return s;
+        default:
+            Py_FatalError("_PyUnicode_InternStatic called on wrong string");
+    }
 
 #ifdef Py_DEBUG
     /* We must not add process-global interned string if there's already a
