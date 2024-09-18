@@ -15,6 +15,7 @@ import time
 import types
 import unittest
 import warnings
+from pathlib import Path
 
 
 try:
@@ -57,6 +58,7 @@ __all__ = [
     "ALWAYS_EQ", "NEVER_EQ", "LARGEST", "SMALLEST",
     "LOOPBACK_TIMEOUT", "INTERNET_TIMEOUT", "SHORT_TIMEOUT", "LONG_TIMEOUT",
     "skip_on_s390x",
+    "in_systemd_nspawn",
     ]
 
 
@@ -2282,3 +2284,11 @@ def copy_python_src_ignore(path, names):
 #Windows doesn't have os.uname() but it doesn't support s390x.
 skip_on_s390x = unittest.skipIf(hasattr(os, 'uname') and os.uname().machine == 's390x',
                                 'skipped on s390x')
+
+
+def in_systemd_nspawn() -> bool:
+    try:
+        return (Path("/run/systemd/container").read_bytes().rstrip() ==
+                b"systemd-nspawn")
+    except FileNotFoundError:
+        return False
