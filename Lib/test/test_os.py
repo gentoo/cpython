@@ -1965,8 +1965,12 @@ class Win32ErrorTests(unittest.TestCase):
 
 
 class TestInvalidFD(unittest.TestCase):
-    singles = ["fchdir", "dup", "fdopen", "fdatasync", "fstat",
-               "fstatvfs", "fsync", "tcgetpgrp", "ttyname"]
+    singles = ["fchdir", "dup", "fdopen", "fstat",
+               "fstatvfs", "tcgetpgrp", "ttyname"]
+    # systemd-nspawn --suppress-sync=true does not verify fd passed
+    # fdatasync() and fsync(), and always returns success
+    if not support.in_systemd_nspawn():
+        singles += ["fdatasync", "fsync"]
     #singles.append("close")
     #We omit close because it doesn't raise an exception on some platforms
     def get_single(f):
