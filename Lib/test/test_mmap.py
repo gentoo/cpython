@@ -1,5 +1,6 @@
 from test.support import (TESTFN, import_module, unlink,
-                          requires, _2G, _4G, gc_collect, cpython_only)
+                          requires, _2G, _4G, gc_collect, cpython_only,
+                          in_systemd_nspawn,)
 import unittest
 import os
 import re
@@ -740,7 +741,7 @@ class MmapTests(unittest.TestCase):
         mm.write(b'python')
         result = mm.flush()
         self.assertIsNone(result)
-        if sys.platform.startswith('linux'):
+        if sys.platform.startswith('linux') and not in_systemd_nspawn():
             # 'offset' must be a multiple of mmap.PAGESIZE on Linux.
             # See bpo-34754 for details.
             self.assertRaises(OSError, mm.flush, 1, len(b'python'))
