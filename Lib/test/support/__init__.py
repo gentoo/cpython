@@ -25,6 +25,7 @@ import time
 import types
 import unittest
 import warnings
+from pathlib import Path
 
 from .testresult import get_test_runner
 
@@ -72,6 +73,7 @@ __all__ = [
     "run_with_tz", "PGO", "missing_compiler_executable", "fd_count",
     "ALWAYS_EQ", "NEVER_EQ", "LARGEST", "SMALLEST",
     "LOOPBACK_TIMEOUT", "INTERNET_TIMEOUT", "SHORT_TIMEOUT", "LONG_TIMEOUT",
+    "in_systemd_nspawn",
     ]
 
 
@@ -3340,3 +3342,11 @@ def adjust_int_max_str_digits(max_digits):
         yield
     finally:
         sys.set_int_max_str_digits(current)
+
+
+def in_systemd_nspawn() -> bool:
+    try:
+        return (Path("/run/systemd/container").read_bytes().rstrip() ==
+                b"systemd-nspawn")
+    except FileNotFoundError:
+        return False
