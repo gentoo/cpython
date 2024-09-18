@@ -15,6 +15,7 @@ import time
 import types
 import unittest
 import warnings
+from pathlib import Path
 
 
 try:
@@ -57,6 +58,7 @@ __all__ = [
     "ALWAYS_EQ", "NEVER_EQ", "LARGEST", "SMALLEST",
     "LOOPBACK_TIMEOUT", "INTERNET_TIMEOUT", "SHORT_TIMEOUT", "LONG_TIMEOUT",
     "skip_on_s390x",
+    "in_systemd_nspawn",
     ]
 
 
@@ -2289,3 +2291,11 @@ def control_characters_c0() -> list[str]:
     C0 control characters defined as the byte range 0x00-0x1F, and 0x7F.
     """
     return [chr(c) for c in range(0x00, 0x20)] + ["\x7F"]
+
+
+def in_systemd_nspawn() -> bool:
+    try:
+        return (Path("/run/systemd/container").read_bytes().rstrip() ==
+                b"systemd-nspawn")
+    except FileNotFoundError:
+        return False
