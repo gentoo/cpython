@@ -59,6 +59,7 @@ __all__ = [
     "Py_DEBUG", "EXCEEDS_RECURSION_LIMIT", "C_RECURSION_LIMIT",
     "skip_on_s390x",
     "BrokenIter",
+    "in_systemd_nspawn_sync_suppressed",
     ]
 
 
@@ -2598,3 +2599,35 @@ def control_characters_c0() -> list[str]:
     C0 control characters defined as the byte range 0x00-0x1F, and 0x7F.
     """
     return [chr(c) for c in range(0x00, 0x20)] + ["\x7F"]
+
+
+def in_systemd_nspawn_sync_suppressed() -> bool:
+    """
+    Test whether the test suite is runing in systemd-nspawn
+    with ``--suppress-sync=true``.
+
+    This can be used to skip tests that rely on ``fsync()`` calls
+    and similar not being intercepted.
+    """
+
+    if not hasattr(os, "O_SYNC"):
+        return False
+
+    try:
+        with open("/run/systemd/container", "rb") as fp:
+            if fp.read().rstrip() != b"systemd-nspawn":
+                return False
+    except FileNotFoundError:
+        return False
+
+    # If systemd-nspawn is used, O_SYNC flag will immediately
+    # trigger EINVAL.  Otherwise, ENOENT will be given instead.
+    import errno
+    try:
+        with os.open(__file__, os.O_RDONLY | os.O_SYNC):
+            pass
+    except OSError as err:
+        if err.errno == errno.EINVAL:
+            return True
+
+    return False
