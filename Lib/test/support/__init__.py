@@ -67,6 +67,7 @@ __all__ = [
     "make_clean_env",
     "BrokenIter",
     "requires_root_user", "requires_non_root_user",
+    "in_systemd_nspawn_sync_suppressed",
     ]
 
 
@@ -2901,3 +2902,35 @@ def skip_on_low_desktop_heap_memory_subprocess(returncode):
 _ROOT_IN_POSIX = hasattr(os, 'geteuid') and os.geteuid() == 0
 requires_root_user = unittest.skipUnless(_ROOT_IN_POSIX, "test needs root privilege")
 requires_non_root_user = unittest.skipIf(_ROOT_IN_POSIX, "test needs non-root account")
+
+
+def in_systemd_nspawn_sync_suppressed() -> bool:
+    """
+    Test whether the test suite is runing in systemd-nspawn
+    with ``--suppress-sync=true``.
+
+    This can be used to skip tests that rely on ``fsync()`` calls
+    and similar not being intercepted.
+    """
+
+    if not hasattr(os, "O_SYNC"):
+        return False
+
+    try:
+        with open("/run/systemd/container", "rb") as fp:
+            if fp.read().rstrip() != b"systemd-nspawn":
+                return False
+    except FileNotFoundError:
+        return False
+
+    # If systemd-nspawn is used, O_SYNC flag will immediately
+    # trigger EINVAL.  Otherwise, ENOENT will be given instead.
+    import errno
+    try:
+        with os.open(__file__, os.O_RDONLY | os.O_SYNC):
+            pass
+    except OSError as err:
+        if err.errno == errno.EINVAL:
+            return True
+
+    return False
