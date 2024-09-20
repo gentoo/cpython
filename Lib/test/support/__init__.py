@@ -65,6 +65,7 @@ __all__ = [
     "force_not_colorized_test_class",
     "make_clean_env",
     "BrokenIter",
+    "in_systemd_nspawn_sync_suppressed",
     ]
 
 
@@ -2894,3 +2895,34 @@ def skip_on_low_desktop_heap_memory_subprocess(returncode):
     if returncode == STATUS_DLL_INIT_FAILED:
         raise unittest.SkipTest('gh-150436: DLL init failed, likely because '
                                 'of low desktop heap memory')
+
+def in_systemd_nspawn_sync_suppressed() -> bool:
+    """
+    Test whether the test suite is runing in systemd-nspawn
+    with ``--suppress-sync=true``.
+
+    This can be used to skip tests that rely on ``fsync()`` calls
+    and similar not being intercepted.
+    """
+
+    if not hasattr(os, "O_SYNC"):
+        return False
+
+    try:
+        with open("/run/systemd/container", "rb") as fp:
+            if fp.read().rstrip() != b"systemd-nspawn":
+                return False
+    except FileNotFoundError:
+        return False
+
+    # If systemd-nspawn is used, O_SYNC flag will immediately
+    # trigger EINVAL.  Otherwise, ENOENT will be given instead.
+    import errno
+    try:
+        with os.open(__file__, os.O_RDONLY | os.O_SYNC):
+            pass
+    except OSError as err:
+        if err.errno == errno.EINVAL:
+            return True
+
+    return False
