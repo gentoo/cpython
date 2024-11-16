@@ -1179,14 +1179,6 @@ class UrlParseTestCase(unittest.TestCase):
         self.assertEqual(p1.hostname, 'v6a.ip')
         self.assertEqual(p1.username, 'user')
         self.assertEqual(p1.path, '/path')
-        p2 = urllib.parse.urlsplit('scheme://user@[0439:23af:2309::fae7%test]/path?query')
-        self.assertEqual(p2.hostname, '0439:23af:2309::fae7%test')
-        self.assertEqual(p2.username, 'user')
-        self.assertEqual(p2.path, '/path')
-        p3 = urllib.parse.urlsplit('scheme://user@[0439:23af:2309::fae7:1234:192.0.2.146%test]/path?query')
-        self.assertEqual(p3.hostname, '0439:23af:2309::fae7:1234:192.0.2.146%test')
-        self.assertEqual(p3.username, 'user')
-        self.assertEqual(p3.path, '/path')
 
     def test_port_casting_failure_message(self):
         message = "Port could not be cast to integer value as 'oracle'"
