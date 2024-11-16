@@ -497,6 +497,7 @@ class EnsurePipTest(BaseTest):
         if not system_site_packages:
             self.assert_pip_not_installed()
 
+    @unittest.skip('modern ensurepip packages do not support 3.8')
     # Issue #26610: pip/pep425tags.py requires ctypes
     @unittest.skipUnless(ctypes, 'pip requires ctypes')
     @requires_zlib
