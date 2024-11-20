@@ -1,3 +1,4 @@
+import os
 import re
 import sys
 import textwrap
@@ -159,6 +160,9 @@ def _can_strace():
 def requires_strace():
     if sys.platform != "linux":
         return unittest.skip("Linux only, requires strace.")
+
+    if "LD_PRELOAD" in os.environ:
+        return unittest.skip("LD_PRELOAD can cause extra syscalls")
 
     if support.check_sanitizer(address=True, memory=True):
         return unittest.skip("LeakSanitizer does not work under ptrace (strace, gdb, etc)")
