@@ -4041,6 +4041,8 @@ PyInit__testcapi(void)
     PyModule_AddObject(m, "instancemethod", (PyObject *)&PyInstanceMethod_Type);
 
     PyModule_AddIntConstant(m, "the_number_three", 3);
+#define Py_C_RECURSION_LIMIT C_RECURSION_LIMIT
+    PyModule_AddIntMacro(m, Py_C_RECURSION_LIMIT);
 
     if (PyModule_AddIntMacro(m, Py_single_input)) {
         return NULL;
