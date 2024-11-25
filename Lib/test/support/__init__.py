@@ -2375,8 +2375,17 @@ def adjust_int_max_str_digits(max_digits):
     finally:
         sys.set_int_max_str_digits(current)
 
+def _get_c_recursion_limit():
+    try:
+        import _testcapi
+        return _testcapi.Py_C_RECURSION_LIMIT
+    except ImportError:
+        return 8000
+
+C_RECURSION_LIMIT = _get_c_recursion_limit()
+
 #For recursion tests, easily exceeds default recursion limit
-EXCEEDS_RECURSION_LIMIT = 5000
+EXCEEDS_RECURSION_LIMIT = C_RECURSION_LIMIT * 3
 
 # The default C recursion limit (from Include/cpython/pystate.h).
 if Py_DEBUG:
