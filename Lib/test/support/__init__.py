@@ -2470,26 +2470,17 @@ def adjust_int_max_str_digits(max_digits):
     finally:
         sys.set_int_max_str_digits(current)
 
-#For recursion tests, easily exceeds default recursion limit
-EXCEEDS_RECURSION_LIMIT = 5000
+def _get_c_recursion_limit():
+    try:
+        import _testcapi
+        return _testcapi.Py_C_RECURSION_LIMIT
+    except ImportError:
+        return 8000
 
-# The default C recursion limit (from Include/cpython/pystate.h).
-if Py_DEBUG:
-    if is_wasi:
-        C_RECURSION_LIMIT = 150
-    else:
-        C_RECURSION_LIMIT = 500
-else:
-    if is_wasi:
-        C_RECURSION_LIMIT = 500
-    elif hasattr(os, 'uname') and os.uname().machine == 's390x':
-        C_RECURSION_LIMIT = 800
-    elif sys.platform.startswith('win'):
-        C_RECURSION_LIMIT = 3000
-    elif check_sanitizer(address=True):
-        C_RECURSION_LIMIT = 4000
-    else:
-        C_RECURSION_LIMIT = 10000
+C_RECURSION_LIMIT = _get_c_recursion_limit()
+
+#For recursion tests, easily exceeds default recursion limit
+EXCEEDS_RECURSION_LIMIT = C_RECURSION_LIMIT * 3
 
 # Windows doesn't have os.uname() but it doesn't support s390x.
 is_s390x = hasattr(os, 'uname') and os.uname().machine == 's390x'
