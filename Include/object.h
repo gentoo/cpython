@@ -97,6 +97,11 @@ typedef struct _typeobject PyTypeObject;
 #define PyObject_VAR_HEAD      PyVarObject ob_base;
 #define Py_INVALID_SIZE (Py_ssize_t)-1
 
+/* PyObjects are given a minimum alignment so that the least significant bits
+ * of an object pointer become available for other purposes.
+ */
+#define _PyObject_ALIGNMENT_SHIFT       2
+
 /* Nothing is actually declared to be a PyObject, but every pointer to
  * a Python object can be cast to a PyObject*.  This is inheritance built
  * by hand.  Similarly every pointer to a variable-size Python object can,
@@ -106,7 +111,7 @@ typedef struct _object {
     _PyObject_HEAD_EXTRA
     Py_ssize_t ob_refcnt;
     PyTypeObject *ob_type;
-} PyObject;
+} Py_ALIGNED(1 << _PyObject_ALIGNMENT_SHIFT) PyObject;
 
 /* Cast argument to PyObject* type. */
 #define _PyObject_CAST(op) ((PyObject*)(op))
