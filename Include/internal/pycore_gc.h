@@ -18,8 +18,9 @@ typedef struct {
 
     // Pointer to previous object in the list.
     // Lowest two bits are used for flags documented later.
+    // Those bits are made available by the struct's minimum alignment.
     uintptr_t _gc_prev;
-} PyGC_Head;
+} PyGC_Head Py_ALIGNED(1 << _PyObject_ALIGNMENT_SHIFT);
 
 #define _PyGC_Head_UNUSED PyGC_Head
 
@@ -146,7 +147,7 @@ static inline void _PyObject_GC_SET_SHARED_INLINE(PyObject *op) {
 /* Bit 1 is set when the object is in generation which is GCed currently. */
 #define _PyGC_PREV_MASK_COLLECTING (2)
 /* The (N-2) most significant bits contain the real address. */
-#define _PyGC_PREV_SHIFT           (2)
+#define _PyGC_PREV_SHIFT           _PyObject_ALIGNMENT_SHIFT
 #define _PyGC_PREV_MASK            (((uintptr_t) -1) << _PyGC_PREV_SHIFT)
 
 /* set for debugging information */
