@@ -154,6 +154,11 @@ check by comparing the reference count field to the immortality reference count.
 #define PyObject_VAR_HEAD      PyVarObject ob_base;
 #define Py_INVALID_SIZE (Py_ssize_t)-1
 
+/* PyObjects are given a minimum alignment so that the least significant bits
+ * of an object pointer become available for other purposes.
+ */
+#define _PyObject_ALIGNMENT_SHIFT       2
+
 /* Nothing is actually declared to be a PyObject, but every pointer to
  * a Python object can be cast to a PyObject*.  This is inheritance built
  * by hand.  Similarly every pointer to a variable-size Python object can,
@@ -183,7 +188,7 @@ struct _object {
 #endif
 
     PyTypeObject *ob_type;
-};
+} Py_ALIGNED(1 << _PyObject_ALIGNMENT_SHIFT);
 #else
 // Objects that are not owned by any thread use a thread id (tid) of zero.
 // This includes both immortal objects and objects whose reference count
@@ -215,7 +220,7 @@ struct _object {
     uint32_t ob_ref_local;      // local reference count
     Py_ssize_t ob_ref_shared;   // shared (atomic) reference count
     PyTypeObject *ob_type;
-};
+} Py_ALIGNED(1 << _PyObject_ALIGNMENT_SHIFT);
 #endif
 
 /* Cast argument to PyObject* type. */
