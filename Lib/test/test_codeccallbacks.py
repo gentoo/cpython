@@ -1,6 +1,7 @@
 import codecs
 import html.entities
 import itertools
+import re
 import sys
 import unicodedata
 import unittest
