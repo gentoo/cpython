@@ -2332,8 +2332,7 @@ def setup_venv_with_pip_setuptools_wheel(venv_dir):
 
         cmd = (python, '-X', 'dev',
                '-m', 'pip', 'install',
-               _findwheel('setuptools'),
-               _findwheel('wheel'))
+               _findwheel('setuptools'))
         if verbose:
             print()
             print('Run:', ' '.join(cmd))
