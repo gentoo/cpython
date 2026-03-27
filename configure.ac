@@ -547,6 +547,9 @@ then
 	*-*-linux*)
 		ac_sys_system=Linux
 		;;
+	*-gnu)
+		ac_sys_system=GNU
+		;;
 	*-*-cygwin*)
 		ac_sys_system=Cygwin
 		;;
@@ -609,6 +612,9 @@ if test "$cross_compiling" = yes; then
 		*)
 			_host_cpu=$host_cpu
 		esac
+		;;
+	*-gnu)
+		_host_ident=$host_cpu
 		;;
 	*-*-cygwin*)
 		_host_cpu=
