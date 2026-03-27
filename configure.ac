@@ -333,6 +333,9 @@ then
 	*-*-darwin*)
 		ac_sys_system=Darwin
 		;;
+	*-gnu)
+		ac_sys_system=GNU
+		;;
 	*-*-vxworks*)
 	    ac_sys_system=VxWorks
 	    ;;
@@ -770,6 +773,9 @@ if test "$cross_compiling" = yes; then
 		*)
 			_host_ident=$host_cpu
 		esac
+		;;
+	*-gnu)
+		_host_ident=$host_cpu
 		;;
 	*-*-cygwin*)
 		_host_ident=
