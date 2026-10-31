@@ -2234,6 +2234,10 @@ class HTTPSTest(TestCase):
     def test_networked_good_cert(self):
         # We feed the server's cert as a validating cert
         import ssl
+
+        if ssl.OPENSSL_VERSION_INFO >= (4, 1, 0):
+            self.skipTest('known failure w/ >=openssl-4.1.0: https://github.com/python/cpython/issues/160823')
+
         support.requires('network')
         selfsigned_pythontestdotnet = 'self-signed.pythontest.net'
         with socket_helper.transient_internet(selfsigned_pythontestdotnet):
